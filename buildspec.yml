@@ -1,0 +1,21 @@
+version: 0.2 
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  pre_build:
+    commands:
+      - cd src/main/resources/static
+      - cd $CODEBUILD_SRC_DIR
+      #- mvn sonar:sonar
+      - mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=kk-java -DskipTests
+  build:
+    commands:
+      - echo Build started on `date`
+  post_build:
+    commands:
+      - mvn package -DskipTests
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - '**/*'
